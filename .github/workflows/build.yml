@@ -1,0 +1,30 @@
+
+name: Build Rust Binary
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build release binary
+        run: cargo build --release --locked
+
+      - name: Upload generated binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: rust-binary
+          path: target/release/
+          if-no-files-found: error
